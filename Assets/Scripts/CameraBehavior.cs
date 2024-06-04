@@ -2,42 +2,46 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CameraBehavior : MonoBehaviour {
+public class CameraBehavior : MonoBehaviour
+{
+    public GameObject player;
+    public float distance = 5f;
+    public float speed = 5f;
+	public float resetSpeed = 50f;
+    private Vector3 offset = new Vector3(0f, 2.4f, 0f); 
 
-	public GameObject player;
-	public float distance;
-	public float speed;
+    private bool z;
 
-	private bool z;
+    void LateUpdate() {
 
-	void LateUpdate () {
-		float dist = Vector3.Distance(player.transform.position, transform.position);
-		Vector3 behind = player.transform.position - new Vector3 (player.transform.forward.x * distance, 
-                                        player.transform.forward.y - 1.0f, player.transform.forward.z * distance);
+		// This is an attempt to replicate Ocarina of Time's camera. 
+		// There is a bug when you walk into the camera, it kinda goes crazy. I couldn't fix this!
 
-		if (!z && Input.GetButton("Z")) {
-			z = true;
-		}
-        else if(z) {
-			transform.LookAt(player.transform);
-			transform.position = Vector3.MoveTowards(transform.position, behind, 30 * Time.deltaTime);
+        Vector3 desiredPosition = player.transform.position - player.transform.forward * distance + offset;
+        float dist = Vector3.Distance(player.transform.position, transform.position);
 
-			if(transform.position == behind) {
-				z = false;
-			}
-		} 
+        if (!z && Input.GetButton("Z")) {
+            z = true;
+        }
+        else if (z) {
+            transform.LookAt(player.transform);
+            transform.position = Vector3.MoveTowards(transform.position, desiredPosition, resetSpeed * Time.deltaTime);
+
+            if (transform.position == desiredPosition) {
+                z = false;
+            }
+        }
         else {
-			if (dist < distance) {
-				transform.LookAt(player.transform);
-			} else if (dist > distance * 2) {
-				transform.LookAt(player.transform);
-
-				transform.position = Vector3.MoveTowards(transform.position, new Vector3(player.transform.position.x, player.transform.position.y + 1.0f, player.transform.position.z - distance), speed * 3 * Time.deltaTime);
-			} else if (dist < distance * 2 && dist > distance) {
-				transform.LookAt(player.transform);
-
-				transform.position = Vector3.MoveTowards(transform.position, new Vector3(player.transform.position.x, player.transform.position.y + 1.0f, player.transform.position.z - distance), speed * Time.deltaTime);
-			}
-		}
-	}
+            if (dist > distance * 2) {
+                transform.position = Vector3.MoveTowards(transform.position, desiredPosition, speed * 3 * Time.deltaTime);
+            }
+            else if (dist < distance) {
+                transform.LookAt(player.transform);
+            }
+            else {
+                transform.position = Vector3.MoveTowards(transform.position, desiredPosition, speed * Time.deltaTime);
+            }
+            transform.LookAt(player.transform);
+        }
+    }
 }
