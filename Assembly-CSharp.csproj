@@ -65,6 +65,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets/Scripts/CharacterMovement.cs" />
+    <Compile Include="Assets/Scripts/SwordSwingScript.cs" />
     <Compile Include="Assets/Scripts/CameraBehavior.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -15,7 +15,7 @@ public class CameraBehavior : MonoBehaviour
     void LateUpdate() {
 
 		// This is an attempt to replicate Ocarina of Time's camera. 
-		// There is a bug when you walk into the camera, it kinda goes crazy. I couldn't fix this!
+		// There is a bug when you walk into the camera, it kinda goes crazy.
 
         Vector3 desiredPosition = player.transform.position - player.transform.forward * distance + offset;
         float dist = Vector3.Distance(player.transform.position, transform.position);
@@ -32,10 +32,12 @@ public class CameraBehavior : MonoBehaviour
             }
         }
         else {
-            if (dist > distance * 2) {
+            if (dist > distance * 1.6f) {
                 transform.position = Vector3.MoveTowards(transform.position, desiredPosition, speed * 3 * Time.deltaTime);
             }
             else if (dist < distance) {
+				// here
+
                 transform.LookAt(player.transform);
             }
             else {
